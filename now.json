@@ -1,0 +1,9 @@
+{
+	"version": 2,
+	"builds": [
+			{ "src": "getProductData.js", "use": "@now/node" }
+	],
+	"routes": [
+			{ "src": "/(.*)", "dest": "/getProductData.js" }
+	]
+}
