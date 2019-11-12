@@ -16,12 +16,11 @@ async function getProductData(url) {
 }
 
 module.exports = async (req, res) => {
-	const pathname = url.parse(req.url).pathname;
-	console.log(pathname);
-	let url = pathname.slice(1);
+	let url = req.url.replace('/','');
 	if (!url.startsWith('http')) {
-			url = 'https://' + url;
+		url = 'https://' + url;
 	}
+	console.log(url);
 	const description = await getProductData(url);
 	res.statusCode = 200;
 	res.end(description);
