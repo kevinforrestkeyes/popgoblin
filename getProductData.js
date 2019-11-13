@@ -11,23 +11,15 @@ async function getProductData(url) {
 	const page = await browser.newPage();
 	await page.goto(url);
 	await autoScroll(page);
-	const data = await Promise.all([
-		page.$eval('.styles__DescriptionContainer-uwktmu-9', el => el.textContent),
-		page.$$eval('.styles__Desktop-uwktmu-2 .styles__Image-uwktmu-7', images => {
-			return images.map(image => image.src); 
-		})
-		.then(([
-			description,
-			images
-		]) => {
-			return {
-				description,
-				images
-			}
-		})
-	])
+	const description = await page.$eval('.styles__DescriptionContainer-uwktmu-9', el => el.textContent);
+	const images = await page.$$eval('.styles__Desktop-uwktmu-2 .styles__Image-uwktmu-7', images => {
+		return images.map(image => image.src); 
+	});
 	await browser.close();
-	return data;
+	return {
+		description,
+		images
+	};
 }
 
 async function autoScroll(page) {
