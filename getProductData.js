@@ -10,18 +10,48 @@ async function getProductData(url) {
 
 	const page = await browser.newPage();
 	await page.goto(url);
-	const description = await page.$eval('.styles__DescriptionContainer-uwktmu-9', el => el.textContent);
+	await autoScroll(page);
+	const data = await Promise.all([
+		page.$eval('.styles__DescriptionContainer-uwktmu-9', el => el.textContent),
+		page.$$eval('.styles__Desktop-uwktmu-2 .styles__Image-uwktmu-7', images => {
+			return images.map(image => image.src); 
+		})
+		.then(([
+			description,
+			images
+		]) => {
+			return {
+				description,
+				images
+			}
+		})
+	])
 	await browser.close();
-	return description;
+	return data;
+}
+
+async function autoScroll(page) {
+	await page.evaluate(async () => {
+		await new Promise((resolve, reject) => {
+			var totalHeight = 0;
+			var distance = 50;
+			var timer = setInterval(() => {
+				var scrollHeight = document.body.scrollHeight;
+				window.scrollBy(0, distance);
+				totalHeight += distance;
+				if (totalHeight >= scrollHeight) {
+					clearInterval(timer);
+					resolve();
+				}
+			}, 100);
+		});
+	});
 }
 
 module.exports = async (req, res) => {
-	let url = req.url.replace('/','');
-	if (!url.startsWith('http')) {
-		url = 'https://' + url;
-	}
-	console.log(url);
-	const description = await getProductData(url);
+	let productSlug = req.url.replace('/', '');
+	const url = `https://www.depop.com/products/${productSlug}`;
+	const data = await getProductData(url);
 	res.statusCode = 200;
-	res.end(description);
+	res.send({ data });
 }
