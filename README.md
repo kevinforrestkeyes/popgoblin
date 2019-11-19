@@ -4,7 +4,7 @@ popgoblin is just a tiny piece of a larger application [wjisk](https://github.co
 
 ## this repository
 
-popgoblin is just a small serverless lambda function that runs puppeteer on a headless chrome instance to scrape detailed product data from specified Depop product pages. for more context on this, visit the other repositories.
+popgoblin is just a small serverless lambda function that runs puppeteer on a headless Chrome instance to scrape detailed product data from specified Depop product pages. for more context on this, visit the other repositories.
 
 ## supporting applications
 
