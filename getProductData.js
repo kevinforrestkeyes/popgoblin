@@ -12,13 +12,15 @@ async function getProductData(url) {
 	await page.goto(url);
 	await autoScroll(page);
 	const description = await page.$eval('.styles__DescriptionContainer-uwktmu-9', el => el.textContent);
+	const timestamp = await page.$eval('.styles__Details-uwktmu-4 time', el => el.getAttribute('datetime'));
 	const images = await page.$$eval('.styles__Desktop-uwktmu-2 .styles__Image-uwktmu-7', images => {
 		return images.map(image => image.src); 
 	});
 	await browser.close();
 	return {
 		description,
-		images
+		images,
+		timestamp
 	};
 }
 
